@@ -36,7 +36,23 @@ in the literature); "undecided" here means *my* pipeline produces no proof.
 
 <!--N4_STATS-->
 
-<!--BB6_STATS-->
+Random samples of the 6-state TNF tree (independent root-to-leaf walks) —
+*measured*:
+
+| Sample | Classified | Breakdown |
+|---|---|---|
+| 4,000 uniform walks | 4,000 / 4,000 | 633 halt; 1,077 escape; 1,974 translated cycler; 296 cycler; 19 backward; 1 inductive |
+| 1,500 deep walks (≥10 of 12 transitions defined before a halt leaf is allowed) | 1,499 / 1,500 | 1 halt; 503 escape; 850 translated cycler; 140 cycler; 4 backward; 1 fully-defined non-halter; **1 undecided** |
+
+The one undecided machine, `1RB---_1LC0RD_0LC1RB_0RB---_------_------`, is a
+binary-counter variant: its tape is an evolving binary numeral with carries,
+its halting transition sits on a carry pattern that never occurs, and
+neither congruence-refined closure (up to T=6, m=3, 4-blocks, 300k abstract
+configs) nor backward reasoning to depth 32 proves it. It needs a learned
+regular invariant (FAR-class decider). This is the shape of the whole BB(6)
+problem in miniature: random sampling finds almost nothing hard — the
+difficulty is concentrated in a vanishingly small set of machines, and each
+survivor demands a strictly stronger proof technique than the last.
 
 ## 2. Acceleration: how far cleverness actually goes
 
@@ -176,6 +192,13 @@ Machine: `1RB1RA_0LC1LE_1LD1LC_1LA0LB_1LF1RE_---0RA`.
 - Abstraction run: 100,000 iterations, 1.3 s; never halted; b = 50,477,
   minimum 0; parities 50,159 even / 49,841 odd; a has 58,500 bits. The
   bbchallenge project has pushed this vastly further with no halt.
+- Pseudo-randomness of the orbit (200,000 iterations, measured): even
+  fraction 0.50018; parity run lengths fit the geometric(1/2) law
+  (49,953/25,054/12,663/6,137 observed vs 50,034/25,017/12,509/6,254
+  expected for lengths 1-4); lag-1 autocorrelation −0.0007. The orbit is
+  statistically indistinguishable from the fair coin the drift argument
+  assumes — and proving *any* of these statistics rigorously for this one
+  deterministic orbit is the open problem.
 
 The pair (trace → mined map → fast abstraction → drift analysis) is the
 complete modern workflow; the step that does not exist is the last one:

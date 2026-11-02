@@ -89,6 +89,25 @@ def test_small_bb_values():
     )
 
 
+def test_no_false_nonhalt_proofs():
+    """The whole decider pipeline must stay silent on halting machines."""
+    from ..deciders import classify_nonhalt
+    from ..machine import BB5_CHAMPION
+
+    assert classify_nonhalt(TM.from_std(BB5_CHAMPION)) is None
+    assert classify_nonhalt(TM.from_std("1RB1LB_1LA0LC_1RZ1LD_1RD0RA")) is None
+    rng = random.Random(123)
+    tested = 0
+    for _ in range(600):
+        tm = random_tm(rng, rng.choice((2, 3, 4)))
+        st, steps, _, _, _, _ = simulate_naive(tm, 5000)
+        if st == HALTED:
+            lab = classify_nonhalt(tm)
+            assert lab is None, (tm.to_std(), lab, steps)
+            tested += 1
+    print(f"soundness ok: {tested} halting machines, no false non-halting proof")
+
+
 def test_hydra_prefix():
     # OEIS A386792: a runs 8, 12, 18, 27, 40, ...
     res = run_abstraction(200, keep=5)
@@ -102,6 +121,7 @@ def main():
     test_escape_detection()
     test_deciders()
     test_small_bb_values()
+    test_no_false_nonhalt_proofs()
     test_hydra_prefix()
     print("ALL TESTS PASSED")
 
