@@ -34,7 +34,30 @@ decider of the Coq-BB5 proof — one more rung on a ladder that provably has no
 top (section 3). Both machines are non-halting (all n ≤ 5 machines are decided
 in the literature); "undecided" here means *my* pipeline produces no proof.
 
-<!--N4_STATS-->
+Full 4-state TNF enumeration (2,943,669 machines classified, 99 min pure
+Python; light deciders inline, heavy pipeline as a parallel second pass over
+the 1,992 survivors) — *measured*:
+
+| Class | Machines |
+|---|---|
+| halting (champion `1RB1LB_1LA0LC_---1LD_1RD0RA`: **S(4)=107, Σ(4)=13** — both reproduced exactly) | 183,983 |
+| fully defined, no halt transition | 2,323,408 |
+| translated cycler | 309,856 |
+| cycler | 59,026 |
+| escape (endless chain into blank tape) | 53,437 |
+| backward reasoning | 8,112 |
+| inductive (bouncer) prover | 3,361 |
+| counter-abstraction closure | 1,945 |
+| **undecided** | **541** |
+
+The 541 unproven machines (0.12 % of those needing a decider at all) are the
+same two classes as the n = 3 stragglers — two-level bouncers and
+coupled/binary counters — i.e. exactly the machines whose proofs need
+composed parametrized rules or learned regular invariants (the bouncers and
+FAR deciders of the BB(5) effort). All 4-state machines are decided in the
+literature, so the S/Σ values above are exact; "undecided" measures the reach
+of *this* pipeline, and the geometric-shrinkage pattern from n = 3 repeats
+one level up, with the residue two orders of magnitude larger.
 
 Random samples of the 6-state TNF tree (independent root-to-leaf walks) —
 *measured*:
